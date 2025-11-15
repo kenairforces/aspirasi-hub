@@ -163,48 +163,67 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
       <ThemeToggle />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Dashboard Admin
-              </h1>
-              {userRole === "superadmin" && (
-                <span className="px-3 py-1 rounded-full bg-gradient-to-r from-secondary to-accent text-white text-xs font-bold flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3" />
-                  SUPERADMIN
-                </span>
-              )}
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 animate-fade-in">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg">
+                <MessageSquare className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+                  Admin Dashboard
+                </h1>
+                {userRole === "superadmin" && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 mt-1 rounded-full bg-gradient-to-r from-secondary to-accent text-white text-xs font-bold shadow-lg animate-pulse">
+                    <ShieldCheck className="w-3 h-3" />
+                    SUPERADMIN ACCESS
+                  </span>
+                )}
+              </div>
             </div>
-            <p className="text-muted-foreground">Kelola aspirasi siswa dengan mudah</p>
+            <p className="text-muted-foreground text-lg">Kelola dan pantau aspirasi siswa secara real-time</p>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          
+          <div className="flex flex-wrap gap-3">
             {userRole === "superadmin" && (
               <Button
                 onClick={() => setShowSuperAdminPanel(!showSuperAdminPanel)}
                 variant="outline"
-                className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+                className="border-2 border-secondary text-secondary hover:bg-secondary hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
               >
                 <Users className="mr-2 h-4 w-4" />
                 {showSuperAdminPanel ? "Lihat Aspirasi" : "Kelola Admin"}
               </Button>
             )}
             <Button
-              onClick={handleDownloadAll}
+              onClick={() => navigate("/admin/statistics")}
               variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-white"
+              className="border-2 border-accent text-accent hover:bg-accent hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            >
+              <MessageSquare className="mr-2 h-4 w-4" />
+              Statistik
+            </Button>
+            <Button
+              onClick={handleDownloadAll}
+              className="bg-gradient-to-r from-primary to-accent text-white hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg"
             >
               <Download className="mr-2 h-4 w-4" />
-              Download Semua
+              Download Excel
             </Button>
             <Button
               onClick={handleLogout}
               variant="outline"
-              className="border-destructive text-destructive hover:bg-destructive hover:text-white"
+              className="border-2 border-destructive text-destructive hover:bg-destructive hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               <LogOut className="mr-2 h-4 w-4" />
               Logout
@@ -218,37 +237,46 @@ const AdminDashboard = () => {
           <>
             <AspirationStats aspirations={aspirations} />
 
-            <Card className="p-6 mb-6 shadow-lg border-2">
+            <Card className="p-6 mb-6 shadow-xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/50 backdrop-blur-sm animate-fade-in">
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary animate-pulse" />
                 <Input
-                  placeholder="Cari berdasarkan nama, kelas, atau isi aspirasi..."
+                  placeholder="🔍 Cari berdasarkan nama, kelas, atau isi aspirasi..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-12 py-6 text-lg border-2 focus:border-primary transition-all duration-300"
                 />
               </div>
             </Card>
 
             {filteredAspirations.length === 0 ? (
-              <Card className="p-12 text-center shadow-lg">
-                <MessageSquare className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Belum Ada Aspirasi</h3>
-                <p className="text-muted-foreground">
+              <Card className="p-16 text-center shadow-2xl bg-gradient-to-br from-card to-muted/20 backdrop-blur-sm animate-fade-in">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                  <MessageSquare className="w-12 h-12 text-primary animate-pulse" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  {searchQuery ? "Hasil Tidak Ditemukan" : "Belum Ada Aspirasi"}
+                </h3>
+                <p className="text-muted-foreground text-lg">
                   {searchQuery
-                    ? "Tidak ada hasil yang sesuai dengan pencarian"
-                    : "Belum ada aspirasi yang masuk"}
+                    ? "Coba gunakan kata kunci lain untuk pencarian"
+                    : "Aspirasi akan muncul di sini setelah siswa mengirimkan"}
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {filteredAspirations.map((aspiration, index) => (
-                  <AspirationCard
+                  <div 
                     key={aspiration.id}
-                    aspiration={aspiration}
-                    onUpdate={fetchAspirations}
-                    delay={index * 0.05}
-                  />
+                    className="animate-fade-in hover:scale-[1.02] transition-transform duration-300"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <AspirationCard
+                      aspiration={aspiration}
+                      onUpdate={fetchAspirations}
+                      delay={index * 0.05}
+                    />
+                  </div>
                 ))}
               </div>
             )}
