@@ -24,7 +24,112 @@ serve(async (req) => {
 
     const { type, aspirationId } = await req.json();
 
-    if (type === 'all') {
+    if (type === 'design' && aspirationId) {
+      // Generate Instagram design for single aspiration
+      const { data: aspiration, error } = await supabaseClient
+        .from('aspirations')
+        .select('*')
+        .eq('id', aspirationId)
+        .single();
+
+      if (error) throw error;
+
+      const date = new Date(aspiration.created_at).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+
+      // Create SVG design for Instagram (1080x1350 - Instagram portrait)
+      const contentPreview = aspiration.content.length > 250 
+        ? aspiration.content.substring(0, 250) + '...' 
+        : aspiration.content;
+
+      const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1080" height="1350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1080" height="1350" fill="url(#bgGradient)"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="150" cy="150" r="200" fill="white" opacity="0.08"/>
+  <circle cx="930" cy="200" r="150" fill="white" opacity="0.08"/>
+  <circle cx="100" cy="1200" r="180" fill="white" opacity="0.08"/>
+  <circle cx="950" cy="1100" r="220" fill="white" opacity="0.08"/>
+  
+  <!-- Main content card -->
+  <rect x="60" y="100" width="960" height="1150" rx="40" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Header section -->
+  <rect x="60" y="100" width="960" height="180" rx="40" fill="#1E293B" fill-opacity="0.95"/>
+  <text x="540" y="200" font-family="Arial, sans-serif" font-size="56" font-weight="bold" text-anchor="middle" fill="white">
+    Portal Aspirasi
+  </text>
+  <text x="540" y="245" font-family="Arial, sans-serif" font-size="36" text-anchor="middle" fill="#94A3B8">
+    Suara Siswa
+  </text>
+  
+  <!-- Student info section -->
+  <rect x="100" y="320" width="880" height="180" rx="20" fill="#F1F5F9"/>
+  
+  <text x="140" y="380" font-family="Arial, sans-serif" font-size="32" font-weight="600" fill="#1E293B">
+    👤 ${aspiration.student_name.replace(/[<>&"']/g, '')}
+  </text>
+  
+  <text x="140" y="430" font-family="Arial, sans-serif" font-size="28" fill="#64748B">
+    🎓 ${(aspiration.student_class || 'Anonim').replace(/[<>&"']/g, '')}
+  </text>
+  
+  <text x="140" y="475" font-family="Arial, sans-serif" font-size="26" fill="#94A3B8">
+    📅 ${date}
+  </text>
+  
+  <!-- Content section -->
+  <rect x="100" y="540" width="880" height="580" rx="20" fill="#FAFAFA"/>
+  
+  <foreignObject x="130" y="570" width="820" height="520">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="
+      font-family: Arial, sans-serif;
+      font-size: 28px;
+      line-height: 1.7;
+      color: #1E293B;
+      padding: 20px;
+      text-align: left;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    ">
+      ${contentPreview.replace(/[<>&"']/g, (char: string) => {
+        const entities: { [key: string]: string } = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
+        return entities[char];
+      })}
+    </div>
+  </foreignObject>
+  
+  <!-- Footer -->
+  <rect x="100" y="1160" width="880" height="70" rx="15" fill="#F1F5F9"/>
+  <text x="540" y="1205" font-family="Arial, sans-serif" font-size="24" font-weight="600" text-anchor="middle" fill="#64748B">
+    ✨ Terima kasih atas aspirasi Anda! ✨
+  </text>
+</svg>`;
+
+      return new Response(svg, {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'image/svg+xml',
+          'Content-Disposition': `attachment; filename="aspirasi-design-${aspiration.student_name.replace(/\s/g, '-')}-${new Date().toISOString().split('T')[0]}.svg"`,
+        },
+      });
+    } else if (type === 'all') {
       // Download all aspirations as CSV
       const { data: aspirations, error } = await supabaseClient
         .from('aspirations')

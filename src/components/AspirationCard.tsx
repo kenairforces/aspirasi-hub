@@ -108,30 +108,35 @@ const AspirationCard = ({ aspiration, onUpdate, delay = 0 }: AspirationCardProps
     }
   };
 
-  const handleDownloadSingle = async () => {
+  const handleDownloadDesign = async () => {
     try {
+      toast({
+        title: "Membuat Design...",
+        description: "Mohon tunggu, design sedang dibuat untuk Instagram",
+      });
+
       const response = await supabase.functions.invoke("download-aspirations", {
-        body: { type: "single", aspirationId: aspiration.id },
+        body: { type: "design", aspirationId: aspiration.id },
       });
 
       if (response.error) throw response.error;
 
-      const blob = new Blob([response.data], { type: "application/pdf" });
+      const blob = new Blob([response.data], { type: "image/png" });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `aspirasi-${aspiration.student_name}-${new Date(aspiration.created_at).toISOString().split("T")[0]}.pdf`;
+      a.download = `aspirasi-design-${aspiration.student_name.replace(/\s/g, '-')}-${new Date(aspiration.created_at).toISOString().split("T")[0]}.png`;
       a.click();
       window.URL.revokeObjectURL(url);
 
       toast({
-        title: "Download Berhasil",
-        description: "Aspirasi telah diunduh.",
+        title: "Download Berhasil! 🎨",
+        description: "Design Instagram telah diunduh dan siap diposting!",
       });
     } catch (error) {
       toast({
         title: "Download Gagal",
-        description: "Tidak dapat mengunduh aspirasi.",
+        description: "Tidak dapat membuat design aspirasi.",
         variant: "destructive",
       });
     }
@@ -233,11 +238,11 @@ const AspirationCard = ({ aspiration, onUpdate, delay = 0 }: AspirationCardProps
           <Button
             size="sm"
             variant="outline"
-            onClick={handleDownloadSingle}
+            onClick={handleDownloadDesign}
             className="border-primary text-primary hover:bg-primary hover:text-white"
           >
             <Download className="mr-2 h-4 w-4" />
-            Download
+            Download Design
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>

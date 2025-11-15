@@ -47,22 +47,26 @@ const AspirationStats = ({ aspirations }: AspirationStatsProps) => {
   ];
 
   return (
-    <div className="grid md:grid-cols-3 gap-4 mb-8">
+    <div className="grid md:grid-cols-3 gap-6 mb-8">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
           <Card
             key={stat.label}
-            className="p-6 animate-fade-in"
+            className="p-8 animate-fade-in shadow-xl border-2 border-primary/10 bg-gradient-to-br from-card to-card/50 backdrop-blur-sm hover:scale-105 hover:shadow-2xl transition-all duration-500 group"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <div className="flex items-center gap-4">
-              <div className={`${stat.bgColor} p-3 rounded-lg`}>
-                <Icon className={`h-6 w-6 ${stat.color}`} />
+            <div className="flex items-center gap-5">
+              <div className={`${stat.bgColor} p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                <Icon className={`h-8 w-8 ${stat.color}`} />
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
-                <p className="text-2xl font-bold">{stat.value}</p>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">
+                  {stat.label}
+                </p>
+                <p className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  {stat.value}
+                </p>
               </div>
             </div>
           </Card>
