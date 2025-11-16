@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Download, Search, MessageSquare, Users, ShieldCheck, FileText, BarChart3 } from "lucide-react";
+import { LogOut, Search, MessageSquare, Users, ShieldCheck, FileText, BarChart3 } from "lucide-react";
 import AspirationCard from "@/components/AspirationCard";
 import AspirationStats from "@/components/AspirationStats";
 import { AdminUserManagement } from "@/components/AdminUserManagement";
@@ -122,35 +122,6 @@ const AdminDashboard = () => {
       description: "Sampai jumpa!",
     });
     navigate("/");
-  };
-
-  const handleDownloadExcel = async () => {
-    try {
-      const response = await supabase.functions.invoke("download-aspirations", {
-        body: { type: "all" },
-      });
-
-      if (response.error) throw response.error;
-
-      const blob = new Blob([response.data], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `aspirasi-rekap-${new Date().toISOString().split("T")[0]}.csv`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      toast({
-        title: "Download Excel Berhasil",
-        description: "File Excel telah diunduh.",
-      });
-    } catch (error) {
-      toast({
-        title: "Download Gagal",
-        description: "Tidak dapat mengunduh file.",
-        variant: "destructive",
-      });
-    }
   };
 
   const handleDownloadPDF = async () => {
@@ -327,13 +298,6 @@ const AdminDashboard = () => {
             >
               <BarChart3 className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
               Statistik
-            </Button>
-            <Button
-              onClick={handleDownloadExcel}
-              className="group bg-gradient-to-r from-primary to-accent text-white hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl"
-            >
-              <Download className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
-              Download Excel
             </Button>
             <Button
               onClick={handleDownloadPDF}

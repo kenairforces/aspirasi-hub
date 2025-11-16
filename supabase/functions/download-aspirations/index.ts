@@ -45,6 +45,35 @@ serve(async (req) => {
         ? aspiration.content.substring(0, 250) + '...' 
         : aspiration.content;
 
+      // Prepare safe wrapped text (avoid foreignObject for wider support)
+      const escapeXml = (s: string) => s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+      const wrapText = (text: string, maxChars = 40) => {
+        const words = text.split(/\s+/);
+        const lines: string[] = [];
+        let line = '';
+        for (const w of words) {
+          if ((line + (line ? ' ' : '') + w).length <= maxChars) {
+            line = line ? line + ' ' + w : w;
+          } else {
+            if (line) lines.push(line);
+            line = w;
+          }
+        }
+        if (line) lines.push(line);
+        return lines.slice(0, 12); // cap lines to fit the card
+      };
+
+      const wrappedLines = wrapText(contentPreview, 40).map(escapeXml);
+      const tspans = wrappedLines
+        .map((ln, i) => `<tspan x="140" dy="${i === 0 ? 0 : 38}">${ln}</tspan>`) 
+        .join('');
+
       const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1080" height="1350" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -97,23 +126,10 @@ serve(async (req) => {
   <!-- Content section -->
   <rect x="100" y="540" width="880" height="580" rx="20" fill="#FAFAFA"/>
   
-  <foreignObject x="130" y="570" width="820" height="520">
-    <div xmlns="http://www.w3.org/1999/xhtml" style="
-      font-family: Arial, sans-serif;
-      font-size: 28px;
-      line-height: 1.7;
-      color: #1E293B;
-      padding: 20px;
-      text-align: left;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    ">
-      ${contentPreview.replace(/[<>&"']/g, (char: string) => {
-        const entities: { [key: string]: string } = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
-        return entities[char];
-      })}
-    </div>
-  </foreignObject>
+  <!-- Wrapped text without foreignObject for broad renderer support -->
+  <text x="140" y="610" font-family="Arial, sans-serif" font-size="28" fill="#1E293B" xml:space="preserve">
+    ${tspans}
+  </text>
   
   <!-- Footer -->
   <rect x="100" y="1160" width="880" height="70" rx="15" fill="#F1F5F9"/>

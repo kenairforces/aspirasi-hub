@@ -121,11 +121,11 @@ const AspirationCard = ({ aspiration, onUpdate, delay = 0 }: AspirationCardProps
 
       if (response.error) throw response.error;
 
-      const blob = new Blob([response.data], { type: "image/png" });
+      const blob = new Blob([response.data], { type: "image/svg+xml" });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `aspirasi-design-${aspiration.student_name.replace(/\s/g, '-')}-${new Date(aspiration.created_at).toISOString().split("T")[0]}.png`;
+      a.download = `aspirasi-design-${aspiration.student_name.replace(/\s/g, '-')}-${new Date(aspiration.created_at).toISOString().split("T")[0]}.svg`;
       a.click();
       window.URL.revokeObjectURL(url);
 
