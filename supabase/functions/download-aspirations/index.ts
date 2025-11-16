@@ -144,22 +144,20 @@ serve(async (req) => {
 
       if (error) throw error;
 
-      // Generate CSV
-      let csv = 'No,Tanggal & Waktu,Nama Siswa,Kelas,Aspirasi,Jumlah Komentar,Status\n';
+      // Generate CSV matching PDF format exactly
+      let csv = 'No,Nama Siswa,Kelas,Isi Aspirasi,Tanggal,Status,Jumlah Komentar\n';
       
       aspirations.forEach((asp, index) => {
-        const date = new Date(asp.created_at).toLocaleString('id-ID', {
+        const date = new Date(asp.created_at).toLocaleDateString('id-ID', {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
         });
         const escapedContent = `"${asp.content.replace(/"/g, '""')}"`;
         const kelas = asp.student_class || '-';
         const commentCount = asp.comments?.length || 0;
         
-        csv += `${index + 1},${date},${asp.student_name},${kelas},${escapedContent},${commentCount},${asp.status}\n`;
+        csv += `${index + 1},${asp.student_name},${kelas},${escapedContent},${date},${asp.status.toUpperCase()},${commentCount}\n`;
       });
 
       return new Response(csv, {

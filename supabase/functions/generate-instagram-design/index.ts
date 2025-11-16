@@ -105,7 +105,7 @@ serve(async (req) => {
               -webkit-line-clamp: 12;
               -webkit-box-orient: vertical;
             ">
-              "${aspiration.content.length > 400 ? aspiration.content.substring(0, 400) + '...' : aspiration.content}"
+              ${(aspiration.content.length > 400 ? aspiration.content.substring(0, 400) + '...' : aspiration.content).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')}
             </div>
           </div>
         </foreignObject>
