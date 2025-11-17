@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Brain, Zap, MessageCircle, Trophy, Users, ArrowLeft } from "lucide-react";
+import { Brain, Zap, MessageCircle, Trophy, Users, ArrowLeft, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import DailyChallenges from "@/components/DailyChallenges";
+import AchievementsList from "@/components/AchievementsList";
 
 const Games = () => {
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ const Games = () => {
           description: "Silakan login terlebih dahulu untuk bermain game",
           variant: "destructive",
         });
-        navigate("/admin/login");
+        navigate("/player-auth");
         return;
       }
       setUser(user);
@@ -81,14 +83,24 @@ const Games = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <Button
-          variant="outline"
-          onClick={() => navigate("/")}
-          className="mb-6 bg-white/10 border-white/20 text-white hover:bg-white/20"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Kembali
-        </Button>
+        <div className="flex gap-4 mb-6">
+          <Button
+            variant="outline"
+            onClick={() => navigate("/")}
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Kembali
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/profile")}
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+          >
+            <User className="mr-2 h-4 w-4" />
+            Profile
+          </Button>
+        </div>
 
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
@@ -164,6 +176,12 @@ const Games = () => {
               </div>
             </Card>
           ))}
+        </div>
+
+        {/* Daily Challenges & Achievements */}
+        <div className="mt-16 max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+          <DailyChallenges />
+          <AchievementsList />
         </div>
 
         {/* Features */}

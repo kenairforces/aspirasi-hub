@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          points_reward: number
+          requirement_type: string
+          requirement_value: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          points_reward?: number
+          requirement_type: string
+          requirement_value: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          points_reward?: number
+          requirement_type?: string
+          requirement_value?: number
+          title?: string
+        }
+        Relationships: []
+      }
       aspirations: {
         Row: {
           content: string
@@ -43,6 +76,38 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      challenge_completions: {
+        Row: {
+          challenge_id: string
+          completed_at: string
+          id: string
+          score_achieved: number
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string
+          id?: string
+          score_achieved: number
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string
+          id?: string
+          score_achieved?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_completions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "daily_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       chat_messages: {
         Row: {
@@ -110,6 +175,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      daily_challenges: {
+        Row: {
+          bonus_points: number
+          challenge_date: string
+          created_at: string
+          description: string
+          game_type: Database["public"]["Enums"]["game_type"]
+          id: string
+          target_score: number
+          title: string
+        }
+        Insert: {
+          bonus_points?: number
+          challenge_date: string
+          created_at?: string
+          description: string
+          game_type: Database["public"]["Enums"]["game_type"]
+          id?: string
+          target_score: number
+          title: string
+        }
+        Update: {
+          bonus_points?: number
+          challenge_date?: string
+          created_at?: string
+          description?: string
+          game_type?: Database["public"]["Enums"]["game_type"]
+          id?: string
+          target_score?: number
+          title?: string
+        }
+        Relationships: []
       }
       friendships: {
         Row: {
@@ -212,6 +310,35 @@ export type Database = {
           },
         ]
       }
+      player_achievements: {
+        Row: {
+          achievement_id: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       player_stats: {
         Row: {
           created_at: string | null
@@ -247,6 +374,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           full_name: string
           id: string
@@ -254,6 +382,7 @@ export type Database = {
           username: string
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           full_name: string
           id: string
@@ -261,6 +390,7 @@ export type Database = {
           username: string
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           full_name?: string
           id?: string
@@ -338,6 +468,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      special_events: {
+        Row: {
+          bonus_multiplier: number
+          created_at: string
+          description: string
+          end_date: string
+          game_type: Database["public"]["Enums"]["game_type"]
+          id: string
+          start_date: string
+          title: string
+        }
+        Insert: {
+          bonus_multiplier?: number
+          created_at?: string
+          description: string
+          end_date: string
+          game_type: Database["public"]["Enums"]["game_type"]
+          id?: string
+          start_date: string
+          title: string
+        }
+        Update: {
+          bonus_multiplier?: number
+          created_at?: string
+          description?: string
+          end_date?: string
+          game_type?: Database["public"]["Enums"]["game_type"]
+          id?: string
+          start_date?: string
+          title?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

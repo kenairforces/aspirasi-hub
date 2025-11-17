@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MultiplayerRoom from "@/components/MultiplayerRoom";
 
 const PatternMaster = () => {
   const navigate = useNavigate();
@@ -105,25 +107,41 @@ const PatternMaster = () => {
         </Button>
 
         {gameState === "menu" && (
-          <div className="max-w-2xl mx-auto text-center animate-fade-in">
+          <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="text-6xl font-bold text-white mb-8">🎯 Pattern Master</h1>
-            <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 mb-6">
-              <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Main:</h2>
-              <ul className="text-left text-white/80 space-y-2">
-                <li>👀 Perhatikan urutan warna yang muncul</li>
-                <li>🧠 Ingat pola warnanya dengan baik</li>
-                <li>🎨 Klik warna sesuai urutan yang ditampilkan</li>
-                <li>📈 Setiap level, pola bertambah panjang!</li>
-              </ul>
-            </Card>
-            <Button
-              size="lg"
-              onClick={startGame}
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:opacity-90 text-white font-bold text-xl px-8 py-6"
-            >
-              <Play className="mr-2 h-6 w-6" />
-              Mulai Bermain
-            </Button>
+            
+            <Tabs defaultValue="solo" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="solo">Solo Mode</TabsTrigger>
+                <TabsTrigger value="multiplayer">Multiplayer</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="solo">
+                <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Main:</h2>
+                  <ul className="text-left text-white/80 space-y-2">
+                    <li>👀 Perhatikan urutan warna yang muncul</li>
+                    <li>🧠 Ingat pola warnanya dengan baik</li>
+                    <li>🎨 Klik warna sesuai urutan yang ditampilkan</li>
+                    <li>📈 Setiap level, pola bertambah panjang!</li>
+                  </ul>
+                </Card>
+                <div className="text-center">
+                  <Button
+                    size="lg"
+                    onClick={startGame}
+                    className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:opacity-90 text-white font-bold text-xl px-8 py-6"
+                  >
+                    <Play className="mr-2 h-6 w-6" />
+                    Mulai Bermain
+                  </Button>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="multiplayer">
+                <MultiplayerRoom gameType="pattern_master" />
+              </TabsContent>
+            </Tabs>
           </div>
         )}
 

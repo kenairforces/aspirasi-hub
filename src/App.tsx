@@ -16,6 +16,8 @@ import PatternMaster from "./pages/PatternMaster";
 import WordSprint from "./pages/WordSprint";
 import Leaderboard from "./pages/Leaderboard";
 import Friends from "./pages/Friends";
+import PlayerAuth from "./pages/PlayerAuth";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -35,10 +37,12 @@ const App = () => (
             <Route path="/games" element={<Games />} />
             <Route path="/games/brain-rush" element={<BrainRush />} />
             <Route path="/games/pattern-master" element={<PatternMaster />} />
-            <Route path="/games/word-sprint" element={<WordSprint />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/friends" element={<Friends />} />
-            <Route path="*" element={<NotFound />} />
+        <Route path="/games/word-sprint" element={<WordSprint />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/friends" element={<Friends />} />
+        <Route path="/player-auth" element={<PlayerAuth />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

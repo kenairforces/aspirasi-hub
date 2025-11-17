@@ -5,6 +5,8 @@ import { ArrowLeft, Zap, Users, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MultiplayerRoom from "@/components/MultiplayerRoom";
 
 const BrainRush = () => {
   const navigate = useNavigate();
@@ -123,13 +125,6 @@ const BrainRush = () => {
     }
   };
 
-  const createRoom = () => {
-    toast({
-      title: "Coming Soon! 🚀",
-      description: "Fitur multiplayer akan segera hadir!",
-    });
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-red-900 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -148,45 +143,51 @@ const BrainRush = () => {
         </Button>
 
         {gameState === "menu" && (
-          <div className="max-w-2xl mx-auto text-center animate-fade-in">
-            <div className="mb-8">
+          <div className="max-w-4xl mx-auto animate-fade-in">
+            <div className="mb-8 text-center">
               <Zap className="w-24 h-24 mx-auto text-yellow-400 mb-4 animate-pulse" />
               <h1 className="text-6xl font-bold text-white mb-4">🧠 Brain Rush</h1>
               <p className="text-xl text-white/80">
                 Jawab soal matematika, logika, dan pola secepat mungkin!
               </p>
             </div>
+            
+            <Tabs defaultValue="solo" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="solo">Solo Mode</TabsTrigger>
+                <TabsTrigger value="multiplayer">Multiplayer</TabsTrigger>
+              </TabsList>
 
-            <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 mb-6">
-              <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Main:</h2>
-              <ul className="text-left text-white/80 space-y-2">
-                <li>⏱️ Kamu punya 60 detik</li>
-                <li>🎯 Jawab soal dengan benar untuk dapat poin</li>
-                <li>🔥 Streak berturut-turut = bonus poin!</li>
-                <li>🏆 Semakin cepat dan akurat, semakin tinggi skor!</li>
-              </ul>
-            </Card>
+              <TabsContent value="solo">
+                <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Main:</h2>
+                  <ul className="text-left text-white/80 space-y-2">
+                    <li>⏱️ Kamu punya 60 detik</li>
+                    <li>🎯 Jawab soal dengan benar untuk dapat poin</li>
+                    <li>🔥 Streak berturut-turut = bonus poin!</li>
+                    <li>🏆 Semakin cepat dan akurat, semakin tinggi skor!</li>
+                  </ul>
+                </Card>
 
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Button
-                size="lg"
-                onClick={startGame}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white font-bold text-xl px-8 py-6"
-              >
-                <Play className="mr-2 h-6 w-6" />
-                Main Solo
-              </Button>
-              <Button
-                size="lg"
-                onClick={createRoom}
-                className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:opacity-90 text-white font-bold text-xl px-8 py-6"
-              >
-                <Users className="mr-2 h-6 w-6" />
-                Main Bareng
-              </Button>
-            </div>
+                <div className="text-center">
+                  <Button
+                    size="lg"
+                    onClick={startGame}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-xl px-12 py-6"
+                  >
+                    <Play className="mr-3 h-6 w-6" />
+                    Mulai Bermain
+                  </Button>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="multiplayer">
+                <MultiplayerRoom gameType="brain_rush" />
+              </TabsContent>
+            </Tabs>
           </div>
         )}
+
 
         {gameState === "playing" && currentQuestion && (
           <div className="max-w-2xl mx-auto animate-fade-in">
