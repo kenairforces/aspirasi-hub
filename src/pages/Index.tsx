@@ -32,7 +32,7 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
           <Card 
             className="p-10 hover:shadow-2xl transition-all duration-500 cursor-pointer group animate-fade-in border-2 hover:border-primary bg-gradient-to-br from-card to-card/50 backdrop-blur-sm relative overflow-hidden"
             onClick={() => navigate('/submit')}
@@ -55,6 +55,33 @@ const Index = () => {
                 className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity text-white font-semibold py-6 text-lg shadow-lg"
               >
                 ✍️ Mulai Kirim Sekarang
+              </Button>
+            </div>
+          </Card>
+
+          <Card 
+            className="p-10 hover:shadow-2xl transition-all duration-500 cursor-pointer group animate-fade-in border-2 hover:border-purple-500 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-sm relative overflow-hidden"
+            onClick={() => navigate('/games')}
+            style={{ animationDelay: '0.1s' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="flex flex-col items-center text-center space-y-6 relative z-10">
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                <Sparkles className="w-12 h-12 text-white animate-pulse" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                  🎮 Game Zone
+                </h2>
+                <p className="text-muted-foreground text-lg leading-relaxed">
+                  Main game seru, asah otak, kejar leaderboard! 3 game brain training menanti!
+                </p>
+              </div>
+              <Button 
+                size="lg"
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 transition-opacity text-white font-semibold py-6 text-lg shadow-lg"
+              >
+                🎯 Main Sekarang!
               </Button>
             </div>
           </Card>
