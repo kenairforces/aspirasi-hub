@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MultiplayerRoom from "@/components/MultiplayerRoom";
+import { supabase } from "@/integrations/supabase/client";
 
 const PatternMaster = () => {
   const navigate = useNavigate();
@@ -139,22 +140,23 @@ const PatternMaster = () => {
 
         {gameState === "menu" && (
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
-            <h1 className="text-6xl font-bold text-white mb-8">🎯 Pattern Master</h1>
+            <h1 className="text-6xl font-bold text-white mb-8">🎯 Tebak Pola Warna</h1>
             
             <Tabs defaultValue="solo" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="solo">Solo Mode</TabsTrigger>
-                <TabsTrigger value="multiplayer">Multiplayer</TabsTrigger>
+                <TabsTrigger value="solo">Mode Solo</TabsTrigger>
+                <TabsTrigger value="multiplayer">Mode Multiplayer</TabsTrigger>
               </TabsList>
 
               <TabsContent value="solo">
                 <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 mb-6">
-                  <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Main:</h2>
+                  <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Bermain:</h2>
                   <ul className="text-left text-white/80 space-y-2">
-                    <li>👀 Perhatikan urutan warna yang muncul</li>
-                    <li>🧠 Ingat pola warnanya dengan baik</li>
-                    <li>🎨 Klik warna sesuai urutan yang ditampilkan</li>
-                    <li>📈 Setiap level, pola bertambah panjang!</li>
+                    <li>🎨 Perhatikan dan ingat urutan warna yang muncul</li>
+                    <li>🧠 Ulangi pola warna dengan urutan yang sama persis</li>
+                    <li>📈 Setiap naik level, pola akan bertambah panjang!</li>
+                    <li>🏆 Semakin tinggi level, semakin banyak poin yang kamu dapat!</li>
+                    <li>⚡ Jangan sampai salah, atau game over!</li>
                   </ul>
                 </Card>
                 <div className="text-center">
@@ -180,8 +182,8 @@ const PatternMaster = () => {
           <div className="max-w-3xl mx-auto animate-fade-in">
             <div className="flex justify-between mb-6">
               <Card className="bg-white/10 backdrop-blur-sm border-white/20 px-6 py-3">
-                <p className="text-white/70 text-sm">Score</p>
-                <p className="text-3xl font-bold text-yellow-400">{score}</p>
+                <p className="text-white/70 text-sm">Skor</p>
+                <p className="text-3xl font-bold text-yellow-400">{score.toLocaleString('id-ID')}</p>
               </Card>
               <Card className="bg-white/10 backdrop-blur-sm border-white/20 px-6 py-3">
                 <p className="text-white/70 text-sm">Level</p>
@@ -190,16 +192,17 @@ const PatternMaster = () => {
             </div>
 
             {gameState === "memorize" && (
-              <Card className="bg-white/10 backdrop-blur-md border-white/20 p-12 text-center mb-6">
-                <h2 className="text-3xl font-bold text-white mb-8">Ingat pola ini!</h2>
-                <div className="flex justify-center gap-4 flex-wrap">
-                  {pattern.map((color, index) => (
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 mb-6 text-center">
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Level {level} - Hafal Pola Ini!
+                </h2>
+                <p className="text-white/70 text-lg mb-6">Pola akan hilang dalam {pattern.length + 2} detik...</p>
+                <div className="grid grid-cols-3 gap-4">
+                  {showPattern && pattern.map((color, index) => (
                     <div
                       key={index}
-                      className={`w-20 h-20 rounded-xl ${showPattern ? colorClasses[color] : "bg-gray-700"} transition-all duration-300 ${
-                        showPattern ? "animate-pulse" : ""
-                      }`}
-                      style={{ animationDelay: `${index * 0.3}s` }}
+                      className={`h-32 rounded-lg ${colorClasses[color]} animate-pulse shadow-2xl transform transition-all hover:scale-105`}
+                      style={{ animationDelay: `${index * 0.2}s` }}
                     />
                   ))}
                 </div>
@@ -207,24 +210,27 @@ const PatternMaster = () => {
             )}
 
             {gameState === "playing" && (
-              <Card className="bg-white/10 backdrop-blur-md border-white/20 p-12 text-center mb-6">
-                <h2 className="text-3xl font-bold text-white mb-8">
-                  Ulangi Pola! ({userPattern.length}/{pattern.length})
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 text-center mb-6">
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Sekarang Giliranmu! ({userPattern.length}/{pattern.length})
                 </h2>
-                <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">
+                <p className="text-white/70 mb-4">Klik warna sesuai urutan yang benar</p>
+                <div className="flex gap-2 justify-center mb-6">
+                  {pattern.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-4 h-4 rounded-full transition-all ${
+                        index < userPattern.length ? "bg-cyan-400 scale-110" : "bg-white/20"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
                   {colors.map((color) => (
                     <button
                       key={color}
                       onClick={() => handleColorClick(color)}
-                      className={`w-full aspect-square rounded-xl ${colorClasses[color]} transition-transform hover:scale-110 active:scale-95`}
-                    />
-                  ))}
-                </div>
-                <div className="flex justify-center gap-2">
-                  {userPattern.map((color, index) => (
-                    <div
-                      key={index}
-                      className={`w-12 h-12 rounded-lg ${colorClasses[color]}`}
+                      className={`h-32 rounded-lg ${colorClasses[color]} shadow-2xl transform transition-all hover:scale-105 active:scale-95 hover:shadow-cyan-500/50`}
                     />
                   ))}
                 </div>
@@ -235,12 +241,13 @@ const PatternMaster = () => {
 
         {gameState === "finished" && (
           <div className="max-w-2xl mx-auto text-center animate-fade-in">
-            <h1 className="text-6xl font-bold text-white mb-8">🎉 Game Selesai!</h1>
+            <h1 className="text-6xl font-bold text-white mb-8">🎮 Permainan Selesai!</h1>
             <Card className="bg-white/10 backdrop-blur-md border-white/20 p-12">
               <div className="mb-8">
-                <p className="text-white/70 text-xl mb-2">Final Score</p>
-                <p className="text-7xl font-bold text-yellow-400 mb-4">{score}</p>
-                <p className="text-white/70 text-lg">Level Reached: {level}</p>
+                <p className="text-white/70 text-xl mb-2">Skor Akhir</p>
+                <p className="text-7xl font-bold text-cyan-400 mb-4">{score.toLocaleString('id-ID')}</p>
+                <p className="text-white/70 text-lg">Level Tertinggi: {level}</p>
+                <p className="text-white/60 text-sm mt-2">Pola terpanjang: {pattern.length} warna</p>
               </div>
               <div className="flex gap-4 justify-center">
                 <Button
