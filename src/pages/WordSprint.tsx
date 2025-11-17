@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MultiplayerRoom from "@/components/MultiplayerRoom";
+import { supabase } from "@/integrations/supabase/client";
 
 const WordSprint = () => {
   const navigate = useNavigate();
@@ -161,23 +162,24 @@ const WordSprint = () => {
 
         {gameState === "menu" && (
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
-            <h1 className="text-6xl font-bold text-white mb-8">📝 Word Sprint</h1>
+            <h1 className="text-6xl font-bold text-white mb-8">📝 Lomba Kata Kilat</h1>
             
             <Tabs defaultValue="solo" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="solo">Solo Mode</TabsTrigger>
-                <TabsTrigger value="multiplayer">Multiplayer</TabsTrigger>
+                <TabsTrigger value="solo">Mode Solo</TabsTrigger>
+                <TabsTrigger value="multiplayer">Mode Multiplayer</TabsTrigger>
               </TabsList>
 
               <TabsContent value="solo">
                 <Card className="bg-white/10 backdrop-blur-md border-white/20 p-8 mb-6">
-                  <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Main:</h2>
+                  <h2 className="text-2xl font-bold text-white mb-4">📜 Cara Bermain:</h2>
                   <ul className="text-left text-white/80 space-y-2">
-                    <li>🔤 Kamu dapat 9 huruf acak</li>
-                    <li>✍️ Buat sebanyak mungkin kata dari huruf tersebut</li>
-                    <li>⏱️ Waktu: 90 detik</li>
-                    <li>📏 Kata minimal 3 huruf</li>
-                    <li>🎯 Kata lebih panjang = lebih banyak poin!</li>
+                    <li>⏱️ Kamu punya waktu 90 detik untuk bermain</li>
+                    <li>🔤 Susun kata sebanyak mungkin dari huruf yang tersedia</li>
+                    <li>📏 Setiap kata minimal harus 3 huruf</li>
+                    <li>🔥 Kata yang lebih panjang memberikan poin lebih banyak!</li>
+                    <li>💡 Setiap kata hanya bisa digunakan sekali</li>
+                    <li>⚡ Cepat dan banyak adalah kunci skor tinggi!</li>
                   </ul>
                 </Card>
                 <div className="text-center">
@@ -251,14 +253,15 @@ const WordSprint = () => {
 
             {foundWords.length > 0 && (
               <Card className="bg-white/10 backdrop-blur-md border-white/20 p-6">
-                <h3 className="text-xl font-bold text-white mb-4">Kata yang ditemukan:</h3>
+                <h3 className="text-xl font-bold text-white mb-4">Kata yang Berhasil Kamu Temukan:</h3>
                 <div className="flex flex-wrap gap-2">
                   {foundWords.map((w, index) => (
                     <span
                       key={index}
-                      className="bg-white/20 px-4 py-2 rounded-lg text-white font-semibold"
+                      className="px-4 py-2 bg-gradient-to-r from-green-500/30 to-emerald-500/30 rounded-full text-white font-semibold border border-green-400/30 animate-fade-in"
+                      style={{ animationDelay: `${index * 0.05}s` }}
                     >
-                      {w} <span className="text-yellow-400">({w.length * 5}pts)</span>
+                      {w} ({w.length * 5} poin)
                     </span>
                   ))}
                 </div>
@@ -269,12 +272,17 @@ const WordSprint = () => {
 
         {gameState === "finished" && (
           <div className="max-w-2xl mx-auto text-center animate-fade-in">
-            <h1 className="text-6xl font-bold text-white mb-8">🎉 Game Selesai!</h1>
+            <h1 className="text-6xl font-bold text-white mb-8">⏰ Waktu Habis!</h1>
             <Card className="bg-white/10 backdrop-blur-md border-white/20 p-12">
               <div className="mb-8">
-                <p className="text-white/70 text-xl mb-2">Final Score</p>
-                <p className="text-7xl font-bold text-yellow-400 mb-4">{score}</p>
-                <p className="text-white/70 text-lg">Kata Ditemukan: {foundWords.length}</p>
+                <p className="text-white/70 text-xl mb-2">Skor Akhir</p>
+                <p className="text-7xl font-bold text-emerald-400 mb-4">{score.toLocaleString('id-ID')}</p>
+                <p className="text-white/70 text-lg">Total Kata Ditemukan: {foundWords.length}</p>
+                {foundWords.length > 0 && (
+                  <p className="text-white/60 text-sm mt-2">
+                    Rata-rata: {(score / foundWords.length).toFixed(1)} poin per kata
+                  </p>
+                )}
               </div>
               <div className="flex gap-4 justify-center">
                 <Button

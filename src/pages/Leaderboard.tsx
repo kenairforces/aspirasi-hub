@@ -114,6 +114,26 @@ const Leaderboard = () => {
                       {getRankIcon(index + 1)}
                     </div>
                     
+                    {player.profiles?.avatar_url && (
+                      <img 
+                        src={player.profiles.avatar_url} 
+                        alt="Avatar" 
+                        className="w-12 h-12 rounded-full border-2 border-white/20"
+                      />
+                    )}
+                    
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-white">
+                        {player.profiles?.username || player.profiles?.full_name || "Pemain Anonim"}
+                      </h3>
+                      <div className="flex gap-4 text-sm text-white/60 mt-1">
+                        <span>🎯 {player.total_points.toLocaleString('id-ID')} poin</span>
+                        <span>🏆 {player.total_wins || 0} menang</span>
+                        <span>🎮 {player.total_games_played || 0} game</span>
+                        <span>🔥 Streak: {player.highest_streak || 0}</span>
+                      </div>
+                    </div>
+                    
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-white">
                         {player.profiles?.full_name || player.profiles?.username || "Unknown Player"}
