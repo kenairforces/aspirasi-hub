@@ -7,6 +7,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import DailyChallenges from "@/components/DailyChallenges";
 import AchievementsList from "@/components/AchievementsList";
+import PowerUpsShop from "@/components/PowerUpsShop";
+import RankingsDisplay from "@/components/RankingsDisplay";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Games = () => {
   const navigate = useNavigate();
@@ -66,10 +69,26 @@ const Games = () => {
     {
       id: "word_sprint",
       title: "📝 Word Sprint",
-      description: "Buat kata sebanyak mungkin dari huruf acak! Adu vocabulary dengan teman-teman.",
+      description: "Temukan kata-kata tersembunyi dari huruf acak! Adu kecerdasan dengan teman.",
       color: "from-green-500 to-emerald-500",
       icon: MessageCircle,
       path: "/games/word-sprint",
+    },
+    {
+      id: "nato_alphabet",
+      title: "📻 NATO Alphabet",
+      description: "Belajar alfabet NATO seperti pilot! Konversi huruf dan kode NATO dengan cepat.",
+      color: "from-amber-500 to-yellow-500",
+      icon: MessageCircle,
+      path: "/games/nato-alphabet",
+    },
+    {
+      id: "quick_math",
+      title: "🧮 Matematika Kilat",
+      description: "Selesaikan operasi matematika secepat kilat! Latih kemampuan berhitung kamu.",
+      color: "from-indigo-500 to-purple-500",
+      icon: Brain,
+      path: "/games/quick-math",
     },
   ];
 

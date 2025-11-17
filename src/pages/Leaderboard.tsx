@@ -36,17 +36,39 @@ const Leaderboard = () => {
 
   const loadLeaderboard = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: statsData, error: statsError } = await supabase
         .from("player_stats")
-        .select(`
-          *,
-          profiles:user_id (username, full_name, avatar_url)
-        `)
+        .select("*")
         .order("total_points", { ascending: false })
         .limit(50);
 
-      if (error) throw error;
-      setLeaderboard(data || []);
+      if (statsError) throw statsError;
+
+      if (!statsData || statsData.length === 0) {
+        setLeaderboard([]);
+        setLoading(false);
+        return;
+      }
+
+      // Get all user IDs
+      const userIds = statsData.map(stat => stat.user_id);
+
+      // Fetch profiles separately
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("*")
+        .in("id", userIds);
+
+      // Merge data
+      const mergedData = statsData.map(stat => {
+        const profile = profilesData?.find(p => p.id === stat.user_id);
+        return {
+          ...stat,
+          profiles: profile || null
+        };
+      });
+
+      setLeaderboard(mergedData);
     } catch (error) {
       console.error("Error loading leaderboard:", error);
     } finally {
@@ -124,39 +146,26 @@ const Leaderboard = () => {
                     
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-white">
-                        {player.profiles?.username || player.profiles?.full_name || "Pemain Anonim"}
+                        {player.profiles?.full_name || player.profiles?.username || "Pemain Anonim"}
                       </h3>
-                      <div className="flex gap-4 text-sm text-white/60 mt-1">
-                        <span>🎯 {player.total_points.toLocaleString('id-ID')} poin</span>
-                        <span>🏆 {player.total_wins || 0} menang</span>
-                        <span>🎮 {player.total_games_played || 0} game</span>
-                        <span>🔥 Streak: {player.highest_streak || 0}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-white">
-                        {player.profiles?.full_name || player.profiles?.username || "Unknown Player"}
-                      </h3>
-                      <p className="text-white/60 text-sm">@{player.profiles?.username}</p>
+                      <p className="text-white/60 text-sm">@{player.profiles?.username || "anonim"}</p>
                     </div>
 
-                    <div className="text-right">
-                      <p className="text-3xl font-bold text-yellow-400">{player.total_points}</p>
-                      <p className="text-white/60 text-sm">points</p>
-                    </div>
-
-                    <div className="hidden md:flex gap-4 text-center">
+                    <div className="flex gap-6 text-center">
                       <div>
-                        <p className="text-lg font-bold text-green-400">{player.total_wins}</p>
-                        <p className="text-white/60 text-xs">Wins</p>
+                        <p className="text-2xl font-bold text-yellow-400">{player.total_points?.toLocaleString('id-ID') || 0}</p>
+                        <p className="text-white/60 text-xs">Poin</p>
                       </div>
                       <div>
-                        <p className="text-lg font-bold text-blue-400">{player.total_games_played}</p>
+                        <p className="text-lg font-bold text-green-400">{player.total_wins || 0}</p>
+                        <p className="text-white/60 text-xs">Menang</p>
+                      </div>
+                      <div>
+                        <p className="text-lg font-bold text-blue-400">{player.total_games_played || 0}</p>
                         <p className="text-white/60 text-xs">Games</p>
                       </div>
                       <div>
-                        <p className="text-lg font-bold text-purple-400">{player.highest_streak}</p>
+                        <p className="text-lg font-bold text-purple-400">{player.highest_streak || 0}</p>
                         <p className="text-white/60 text-xs">Streak</p>
                       </div>
                     </div>

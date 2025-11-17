@@ -339,6 +339,92 @@ export type Database = {
           },
         ]
       }
+      player_badges: {
+        Row: {
+          badge_description: string
+          badge_icon: string
+          badge_name: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_description: string
+          badge_icon: string
+          badge_name: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_description?: string
+          badge_icon?: string
+          badge_name?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      player_items: {
+        Row: {
+          id: string
+          power_up_id: string
+          purchased_at: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          power_up_id: string
+          purchased_at?: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          id?: string
+          power_up_id?: string
+          purchased_at?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_items_power_up_id_fkey"
+            columns: ["power_up_id"]
+            isOneToOne: false
+            referencedRelation: "power_ups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_rankings: {
+        Row: {
+          achieved_at: string
+          id: string
+          min_points: number
+          rank_icon: string
+          rank_name: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string
+          id?: string
+          min_points: number
+          rank_icon: string
+          rank_name: string
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string
+          id?: string
+          min_points?: number
+          rank_icon?: string
+          rank_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       player_stats: {
         Row: {
           created_at: string | null
@@ -369,6 +455,39 @@ export type Database = {
           total_wins?: number | null
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      power_ups: {
+        Row: {
+          cost: number
+          created_at: string
+          description: string
+          effect_type: string
+          effect_value: number
+          icon: string
+          id: string
+          name: string
+        }
+        Insert: {
+          cost?: number
+          created_at?: string
+          description: string
+          effect_type: string
+          effect_value?: number
+          icon: string
+          id?: string
+          name: string
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          description?: string
+          effect_type?: string
+          effect_value?: number
+          icon?: string
+          id?: string
+          name?: string
         }
         Relationships: []
       }

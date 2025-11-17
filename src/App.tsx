@@ -15,6 +15,8 @@ import BrainRush from "./pages/BrainRush";
 import PatternMaster from "./pages/PatternMaster";
 import WordSprint from "./pages/WordSprint";
 import Leaderboard from "./pages/Leaderboard";
+import NatoAlphabet from "./pages/NatoAlphabet";
+import QuickMath from "./pages/QuickMath";
 import Friends from "./pages/Friends";
 import PlayerAuth from "./pages/PlayerAuth";
 import Profile from "./pages/Profile";
@@ -35,9 +37,11 @@ const App = () => (
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/statistics" element={<Statistics />} />
             <Route path="/games" element={<Games />} />
-            <Route path="/games/brain-rush" element={<BrainRush />} />
-            <Route path="/games/pattern-master" element={<PatternMaster />} />
+        <Route path="/games/brain-rush" element={<BrainRush />} />
+        <Route path="/games/pattern-master" element={<PatternMaster />} />
         <Route path="/games/word-sprint" element={<WordSprint />} />
+        <Route path="/games/nato-alphabet" element={<NatoAlphabet />} />
+        <Route path="/games/quick-math" element={<QuickMath />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/player-auth" element={<PlayerAuth />} />
