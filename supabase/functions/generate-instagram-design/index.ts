@@ -90,185 +90,145 @@ serve(async (req) => {
       .map((line, i) => `<tspan x="540" dy="${i === 0 ? 0 : lineHeight}" xml:space="preserve">${line}</tspan>`)
       .join("");
 
-    // Viral-worthy Instagram design with trendy elements
+    // NGL-style clean Instagram design with pointing character
     const svg = `
       <svg width="1080" height="1080" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Vibrant gradient backgrounds -->
-          <linearGradient id="mainGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#FF6B9D" />
-            <stop offset="25%" stop-color="#C06CEA" />
-            <stop offset="50%" stop-color="#8E54E9" />
-            <stop offset="75%" stop-color="#4776E6" />
-            <stop offset="100%" stop-color="#8E54E9" />
+          <!-- Simple gradients ala NGL -->
+          <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF6B6B" />
+            <stop offset="100%" stop-color="#4ECDC4" />
           </linearGradient>
           
-          <linearGradient id="accent1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#FFD89B" />
-            <stop offset="100%" stop-color="#19547B" />
+          <linearGradient id="cardBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFFFFF" />
+            <stop offset="100%" stop-color="#F8F9FA" />
           </linearGradient>
           
-          <linearGradient id="accent2" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stop-color="#FC466B" />
-            <stop offset="100%" stop-color="#3F5EFB" />
-          </linearGradient>
-          
-          <linearGradient id="textShine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#fff" stop-opacity="0.9" />
-            <stop offset="50%" stop-color="#fff" stop-opacity="1" />
-            <stop offset="100%" stop-color="#fff" stop-opacity="0.9" />
-          </linearGradient>
-          
-          <radialGradient id="spotlight" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="#fff" stop-opacity="0.3" />
-            <stop offset="100%" stop-color="#fff" stop-opacity="0" />
-          </radialGradient>
-          
-          <!-- Filters for effects -->
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
+          <filter id="softShadow">
+            <feDropShadow dx="0" dy="10" stdDeviation="20" flood-color="#000" flood-opacity="0.15"/>
           </filter>
-          
-          <filter id="strongGlow">
-            <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          
-          <filter id="shadow">
-            <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.5"/>
-          </filter>
-          
-          <!-- Pattern untuk texture -->
-          <pattern id="noise" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-            <rect width="100" height="100" fill="#000" opacity="0.03"/>
-            <circle cx="20" cy="20" r="1" fill="#fff" opacity="0.1"/>
-            <circle cx="60" cy="40" r="1" fill="#fff" opacity="0.1"/>
-            <circle cx="40" cy="80" r="1" fill="#fff" opacity="0.1"/>
-          </pattern>
         </defs>
 
-        <!-- Base gradient background -->
-        <rect width="1080" height="1080" fill="url(#mainGrad)" />
+        <!-- Background gradient -->
+        <rect width="1080" height="1080" fill="url(#bg)" />
         
-        <!-- Spotlight effect -->
-        <circle cx="540" cy="540" r="600" fill="url(#spotlight)" />
+        <!-- Decorative circles -->
+        <circle cx="150" cy="150" r="100" fill="#FFE66D" opacity="0.3" />
+        <circle cx="930" cy="200" r="120" fill="#FF6B6B" opacity="0.25" />
+        <circle cx="100" cy="900" r="90" fill="#4ECDC4" opacity="0.3" />
+        <circle cx="950" cy="880" r="110" fill="#95E1D3" opacity="0.25" />
         
-        <!-- Animated circles (decorative orbs) -->
-        <circle cx="200" cy="200" r="250" fill="#FFD89B" opacity="0.15" filter="url(#glow)" />
-        <circle cx="880" cy="250" r="200" fill="#FC466B" opacity="0.12" filter="url(#glow)" />
-        <circle cx="150" cy="850" r="220" fill="#3F5EFB" opacity="0.13" filter="url(#glow)" />
-        <circle cx="900" cy="880" r="260" fill="#C06CEA" opacity="0.14" filter="url(#glow)" />
+        <!-- Floating emoji decorations -->
+        <text x="180" y="250" font-size="50" opacity="0.6">💭</text>
+        <text x="850" y="280" font-size="45" opacity="0.6">✨</text>
+        <text x="120" y="820" font-size="48" opacity="0.6">💫</text>
+        <text x="900" y="850" font-size="52" opacity="0.6">🌟</text>
+        <text x="300" y="180" font-size="40" opacity="0.5">💡</text>
+        <text x="750" y="900" font-size="42" opacity="0.5">🎯</text>
         
-        <!-- Floating stars and sparkles -->
-        <g opacity="0.6" fill="#fff">
-          <!-- Big stars -->
-          <path d="M 250 150 L 255 165 L 270 170 L 255 175 L 250 190 L 245 175 L 230 170 L 245 165 Z" filter="url(#glow)"/>
-          <path d="M 820 200 L 825 215 L 840 220 L 825 225 L 820 240 L 815 225 L 800 220 L 815 215 Z" filter="url(#glow)"/>
-          <path d="M 180 750 L 185 765 L 200 770 L 185 775 L 180 790 L 175 775 L 160 770 L 175 765 Z" filter="url(#glow)"/>
-          <path d="M 900 780 L 905 795 L 920 800 L 905 805 L 900 820 L 895 805 L 880 800 L 895 795 Z" filter="url(#glow)"/>
-          
-          <!-- Small sparkles -->
-          <circle cx="350" cy="280" r="3" filter="url(#glow)"/>
-          <circle cx="730" cy="320" r="2.5" filter="url(#glow)"/>
-          <circle cx="280" cy="600" r="3.5" filter="url(#glow)"/>
-          <circle cx="800" cy="650" r="2" filter="url(#glow)"/>
-          <circle cx="450" cy="850" r="3" filter="url(#glow)"/>
-          <circle cx="650" cy="180" r="2.5" filter="url(#glow)"/>
-        </g>
+        <!-- Main content card -->
+        <rect x="80" y="200" width="920" height="${contentHeight + 200}" 
+          rx="40" 
+          fill="url(#cardBg)" 
+          filter="url(#softShadow)" />
         
-        <!-- Geometric shapes floating -->
-        <g opacity="0.12" fill="#fff">
-          <rect x="100" y="400" width="40" height="40" rx="5" transform="rotate(25 120 420)"/>
-          <rect x="940" y="500" width="35" height="35" rx="5" transform="rotate(-20 957 517)"/>
-          <polygon points="200,650 220,680 180,680" filter="url(#glow)"/>
-          <polygon points="880,350 900,380 860,380" filter="url(#glow)"/>
-        </g>
-        
-        <!-- Noise texture overlay -->
-        <rect width="1080" height="1080" fill="url(#noise)" />
-        
-        <!-- Main content card with glassmorphism -->
-        <rect x="60" y="${startY - lineHeight - 90}" width="960" height="${contentHeight + 180}" 
-          rx="45" 
-          fill="rgba(255, 255, 255, 0.12)" 
-          stroke="url(#textShine)" 
-          stroke-width="2.5"
-          filter="url(#shadow)" />
-        
-        <!-- Inner glow border -->
-        <rect x="68" y="${startY - lineHeight - 82}" width="944" height="${contentHeight + 164}" 
-          rx="41" 
-          fill="none" 
-          stroke="rgba(255, 255, 255, 0.3)" 
-          stroke-width="1" />
-        
-        <!-- Top decorative bar with gradient -->
-        <rect x="60" y="${startY - lineHeight - 90}" width="960" height="10" rx="45" 
-          fill="url(#accent1)" opacity="0.8" filter="url(#glow)" />
-        
-        <!-- Badge/label decoration -->
-        <rect x="420" y="${startY - lineHeight - 120}" width="240" height="50" rx="25"
-          fill="rgba(255, 255, 255, 0.25)" 
-          stroke="rgba(255, 255, 255, 0.4)" 
-          stroke-width="1.5"
-          filter="url(#shadow)" />
-        <text x="540" y="${startY - lineHeight - 85}" 
+        <!-- Header bar -->
+        <rect x="80" y="200" width="920" height="100" rx="40" fill="#FF6B6B" />
+        <text x="540" y="265" 
           font-family="'Inter', 'SF Pro Display', Arial, sans-serif" 
-          font-size="24" 
-          font-weight="700"
-          fill="#fff" 
-          text-anchor="middle"
-          filter="url(#strongGlow)">✨ ASPIRASI SISWA ✨</text>
+          font-size="38" 
+          font-weight="800"
+          fill="#FFFFFF" 
+          text-anchor="middle">💬 ASPIRASI SISWA</text>
         
-        <!-- Large quote marks with strong glow -->
-        <text x="110" y="${startY - 30}" 
-          font-family="Georgia, serif" 
-          font-size="160" 
-          fill="url(#accent2)" 
-          opacity="0.35" 
-          font-weight="bold"
-          filter="url(#strongGlow)">"</text>
-        <text x="970" y="${startY + contentHeight + 60}" 
-          font-family="Georgia, serif" 
-          font-size="160" 
-          fill="url(#accent2)" 
-          opacity="0.35" 
-          font-weight="bold" 
-          text-anchor="end"
-          filter="url(#strongGlow)">"</text>
+        <!-- Pointing character illustration (left side) -->
+        <g transform="translate(100, ${startY + Math.floor(contentHeight / 2) - 80})">
+          <!-- Person body -->
+          <ellipse cx="0" cy="80" rx="35" ry="45" fill="#FFE66D" />
+          <!-- Head -->
+          <circle cx="0" cy="20" r="28" fill="#FFD93D" />
+          <!-- Eyes -->
+          <circle cx="-8" cy="18" r="3" fill="#333" />
+          <circle cx="8" cy="18" r="3" fill="#333" />
+          <!-- Smile -->
+          <path d="M -10 26 Q 0 32 10 26" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Pointing arm -->
+          <path d="M 35 60 L 80 60 L 85 55 L 90 60 L 85 65 L 80 60" fill="#FFCB74" stroke="#FFB84D" stroke-width="2"/>
+          <!-- Exclamation marks -->
+          <text x="50" y="30" font-size="24" fill="#FF6B6B">!</text>
+          <text x="65" y="25" font-size="20" fill="#FF6B6B">!</text>
+        </g>
         
-        <!-- Main aspiration text with premium styling -->
+        <!-- Pointing character illustration (right side) -->
+        <g transform="translate(980, ${startY + Math.floor(contentHeight / 2) + 40}) scale(-1, 1)">
+          <!-- Person body -->
+          <ellipse cx="0" cy="80" rx="35" ry="45" fill="#95E1D3" />
+          <!-- Head -->
+          <circle cx="0" cy="20" r="28" fill="#4ECDC4" />
+          <!-- Eyes -->
+          <circle cx="-8" cy="18" r="3" fill="#333" />
+          <circle cx="8" cy="18" r="3" fill="#333" />
+          <!-- Smile -->
+          <path d="M -10 26 Q 0 32 10 26" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Pointing arm -->
+          <path d="M 35 60 L 80 60 L 85 55 L 90 60 L 85 65 L 80 60" fill="#81D8D0" stroke="#4ECDC4" stroke-width="2"/>
+          <!-- Exclamation marks -->
+          <text x="50" y="35" font-size="22" fill="#4ECDC4">!</text>
+          <text x="65" y="30" font-size="18" fill="#4ECDC4">!</text>
+        </g>
+        
+        <!-- Arrow pointing to text -->
+        <g opacity="0.7">
+          <path d="M 150 ${startY - 50} L 180 ${startY - 20}" stroke="#FF6B6B" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 180 ${startY - 20} L 175 ${startY - 35}" stroke="#FF6B6B" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 180 ${startY - 20} L 165 ${startY - 25}" stroke="#FF6B6B" stroke-width="4" stroke-linecap="round"/>
+          
+          <path d="M 930 ${startY - 50} L 900 ${startY - 20}" stroke="#4ECDC4" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 900 ${startY - 20} L 905 ${startY - 35}" stroke="#4ECDC4" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 900 ${startY - 20} L 915 ${startY - 25}" stroke="#4ECDC4" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        
+        <!-- Quote decoration -->
+        <text x="150" y="${startY - 10}" 
+          font-family="Georgia, serif" 
+          font-size="80" 
+          fill="#FF6B6B" 
+          opacity="0.2" 
+          font-weight="bold">"</text>
+        
+        <!-- Main aspiration text (clean, no glow) -->
         <text x="540" y="${startY}" 
           text-anchor="middle" 
-          font-family="'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-family="'Inter', 'SF Pro Display', -apple-system, Arial, sans-serif"
           font-size="${fontSize}" 
-          fill="url(#textShine)" 
-          letter-spacing="0.4"
-          filter="url(#strongGlow)"
-          font-weight="700">
+          fill="#2D3436" 
+          letter-spacing="0.3"
+          font-weight="600">
           ${tspans}
         </text>
         
+        <!-- Quote decoration -->
+        <text x="930" y="${startY + contentHeight + 50}" 
+          font-family="Georgia, serif" 
+          font-size="80" 
+          fill="#4ECDC4" 
+          opacity="0.2" 
+          font-weight="bold" 
+          text-anchor="end">"</text>
+        
         <!-- Bottom decorative elements -->
-        <g opacity="0.7">
-          <circle cx="480" cy="${startY + contentHeight + 100}" r="4" fill="#fff" filter="url(#glow)"/>
-          <circle cx="540" cy="${startY + contentHeight + 100}" r="4" fill="#fff" filter="url(#glow)"/>
-          <circle cx="600" cy="${startY + contentHeight + 100}" r="4" fill="#fff" filter="url(#glow)"/>
+        <g transform="translate(540, ${startY + contentHeight + 120})">
+          <circle cx="-30" cy="0" r="5" fill="#FF6B6B" />
+          <circle cx="0" cy="0" r="5" fill="#FFE66D" />
+          <circle cx="30" cy="0" r="5" fill="#4ECDC4" />
         </g>
         
-        <!-- Shine effect line -->
-        <rect x="200" y="${startY + contentHeight + 120}" width="680" height="2" rx="1" 
-          fill="url(#textShine)" opacity="0.5" filter="url(#glow)" />
+        <!-- Floating stars around -->
+        <text x="250" y="${startY - 80}" font-size="35" opacity="0.6">⭐</text>
+        <text x="830" y="${startY - 70}" font-size="30" opacity="0.6">✨</text>
+        <text x="200" y="${startY + contentHeight + 140}" font-size="32" opacity="0.6">💫</text>
+        <text x="880" y="${startY + contentHeight + 150}" font-size="35" opacity="0.6">🌟</text>
       </svg>
     `;
 
