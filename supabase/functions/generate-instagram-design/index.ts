@@ -62,6 +62,14 @@ serve(async (req) => {
     if (error) throw error;
     if (!aspiration?.content) throw new Error("Aspiration not found or empty");
 
+    // Format date in Indonesian
+    const dateObj = new Date(aspiration.created_at);
+    const formattedDate = dateObj.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+
     const raw = String(aspiration.content).trim();
     const safe = escapeXML(raw);
 
@@ -132,7 +140,7 @@ serve(async (req) => {
         
         <!-- Header -->
         <text x="540" y="180" font-family="Arial, sans-serif" font-size="42" font-weight="bold" text-anchor="middle" fill="#6366F1" filter="url(#glow)">
-          💬 Aspirasi Siswa
+          Aspirasi Siswa
         </text>
         
         <!-- Decorative line -->
@@ -151,9 +159,9 @@ serve(async (req) => {
         <!-- Decorative bottom line -->
         <line x1="240" y1="870" x2="840" y2="870" stroke="#A78BFA" stroke-width="2" opacity="0.5"/>
         
-        <!-- Footer with emoji -->
-        <text x="540" y="940" font-family="Arial, sans-serif" font-size="28" text-anchor="middle" fill="#A78BFA">
-          ✨ 🌟 💫 ⭐ ✨
+        <!-- Footer with date -->
+        <text x="540" y="940" font-family="Arial, sans-serif" font-size="26" text-anchor="middle" fill="#6366F1" font-weight="500">
+          📅 ${escapeXML(formattedDate)}
         </text>
       </svg>
     `;
