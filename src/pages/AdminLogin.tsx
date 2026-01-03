@@ -92,54 +92,31 @@ const AdminLogin = () => {
     }
   };
 
+  const [superadminEmail, setSuperadminEmail] = useState("");
+
   const handleSuperadminLogin = async () => {
+    // Validate inputs
+    if (!superadminEmail.trim() || !superadminPassword.trim()) {
+      toast({
+        title: "Input Tidak Valid",
+        description: "Email dan password harus diisi.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       
-      // Try to login first
+      // Login with provided credentials - no hardcoded values
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: "superadmin@aspirasi.com",
+        email: superadminEmail.trim(),
         password: superadminPassword,
       });
 
-      if (signInError) {
-        // If user doesn't exist and password matches, create the superadmin
-        if (signInError.message.includes("Invalid") && superadminPassword === "faspirasp33.") {
-          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-            email: "superadmin@aspirasi.com",
-            password: superadminPassword,
-            options: {
-              data: {
-                full_name: "Super Admin",
-                username: "superadmin",
-              },
-            },
-          });
+      if (signInError) throw signInError;
 
-          if (signUpError) throw signUpError;
-
-          // Add superadmin role
-          if (signUpData.user) {
-            const { error: roleError } = await supabase
-              .from("user_roles")
-              .insert({
-                user_id: signUpData.user.id,
-                role: "superadmin",
-              });
-
-            if (roleError) throw roleError;
-          }
-
-          toast({
-            title: "Superadmin Dibuat",
-            description: "Akun superadmin berhasil dibuat. Silakan login.",
-          });
-          return;
-        }
-        throw signInError;
-      }
-
-      // Check if user has superadmin role
+      // Verify user has superadmin role
       if (signInData.user) {
         const { data: roles } = await supabase
           .from("user_roles")
@@ -148,7 +125,7 @@ const AdminLogin = () => {
 
         if (!roles || !roles.some((r) => r.role === "superadmin")) {
           await supabase.auth.signOut();
-          throw new Error("Bukan akun superadmin");
+          throw new Error("Akun ini tidak memiliki akses superadmin");
         }
 
         toast({
@@ -160,7 +137,7 @@ const AdminLogin = () => {
     } catch (error: any) {
       toast({
         title: "Login Gagal",
-        description: error.message || "Password superadmin tidak valid.",
+        description: error.message || "Email atau password tidak valid.",
         variant: "destructive",
       });
     } finally {
@@ -262,6 +239,16 @@ const AdminLogin = () => {
                 </DialogHeader>
                 <div className="space-y-4">
                   <div className="space-y-2">
+                    <Label htmlFor="superadmin-email">Email Superadmin</Label>
+                    <Input
+                      id="superadmin-email"
+                      type="email"
+                      placeholder="Masukkan email superadmin"
+                      value={superadminEmail}
+                      onChange={(e) => setSuperadminEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="superadmin-password">Password Superadmin</Label>
                     <Input
                       id="superadmin-password"
@@ -274,8 +261,9 @@ const AdminLogin = () => {
                   <Button
                     onClick={handleSuperadminLogin}
                     className="w-full bg-gradient-to-r from-secondary to-destructive"
+                    disabled={isLoading}
                   >
-                    Login Superadmin
+                    {isLoading ? "Memproses..." : "Login Superadmin"}
                   </Button>
                 </div>
               </DialogContent>
